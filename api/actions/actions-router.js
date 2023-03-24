@@ -22,6 +22,23 @@ router.get('/:id', validateActionId, (req, res) => {
   res.json(req.action)
 })
 
+router.post('/', validateActionInfo, (req, res, next) => {
+  Action.insert(req.body)
+  .then(newAction => {
+    res.status(201).json(newAction)
+  })
+  .catch(next)
+})
+
+router.put('/:id', validateActionId, validateActionInfo, async(req, res, next) => {
+  try{
+    const updatedAction = await Action.update(req.params.id, req.body)
+    res.status(200).json(updatedAction)
+  }catch(err){
+    next(err)
+  }
+})
+
 //ERROR HANDLING
 router.use((err, req, res, next) => {
   res.status(500).json({
