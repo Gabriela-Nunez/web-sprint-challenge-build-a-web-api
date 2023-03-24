@@ -15,14 +15,30 @@ async function validateProjectId(req, res, next) {
     }
 
   }catch(err){
-    res.status(404).json({
+    res.status(500).json({
       message: 'Sorry, unable to find project'
     })
   }
 }
 
-
+function validateProject(req, res, next) {
+  try{
+    const { name, description } = req.body;
+    if(!name ||  !description) {
+      res.status(400).json({
+        message: "missing required name field"
+      })
+    } else {
+      next()
+    }
+  }catch(err){
+    res.status(500).json({
+      message: 'Sorry, unable to update project'
+    })
+  }
+}
 
 module.exports = {
   validateProjectId,
+  validateProject,
 }
