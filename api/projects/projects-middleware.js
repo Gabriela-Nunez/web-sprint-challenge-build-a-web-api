@@ -26,7 +26,7 @@ function validateProject(req, res, next) {
     const { name, description } = req.body;
     if(!name ||  !description) {
       res.status(400).json({
-        message: "missing required name field"
+        message: "missing required fields"
       })
     } else {
       next()
@@ -38,7 +38,30 @@ function validateProject(req, res, next) {
   }
 }
 
+
+async function validateProjectInfo(req, res, next) {
+  const {name, description, completed} = req.body;
+  if(req.method === 'PUT') {
+      if(!name || !description || !(completed === false || completed === true)) {
+          res.status(400).json({
+            message: 'name, description, and completed required'
+          })
+      } else {
+          next();
+      }
+  } else {
+      if(!name || !description) {
+        res.status(400).json({
+          message: 'name, description, and completed required'
+        })
+      } else {
+          next();
+      }
+  }
+}
+
 module.exports = {
   validateProjectId,
   validateProject,
+  validateProjectInfo,
 }
